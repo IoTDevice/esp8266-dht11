@@ -27,7 +27,7 @@
 //   https://learn.adafruit.com/dht/overview
 DHT_Unified dht(DHTPIN, DHTTYPE);
 uint32_t delayMS;
-
+const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
 const int httpPort = 80;
 String deviceName = "温湿度传感器";
 String version = "1.0";
@@ -124,7 +124,7 @@ void setup() {
     // Serial.print(".");
   }
 
-  if (MDNS.begin("esp8266")) {
+  if (MDNS.begin("dht11-"+String(ESP.getFlashChipId()))) {
     // Serial.println("MDNS responder started");
   }
 
@@ -133,6 +133,37 @@ void setup() {
   server.on("/status", handleCurrentStatus);
   // about this device
   server.on("/info", handleDeviceInfo);
+  server.on("/update", HTTP_POST, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/plain", (Update.hasError()) ? "{\"code\":1,\"message\":\"fail\"}" : "{\"code\":0,\"message\":\"success\"}");
+    ESP.restart();
+  }, []() {
+    HTTPUpload& upload = server.upload();
+    if (upload.status == UPLOAD_FILE_START) {
+      WiFiUDP::stopAll();
+      uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+      if (!Update.begin(maxSketchSpace)) { //start with max available size
+        
+      }
+    } else if (upload.status == UPLOAD_FILE_WRITE) {
+      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+        
+      }
+    } else if (upload.status == UPLOAD_FILE_END) {
+      if (Update.end(true)) { //true to set the size to the current progress
+        
+      } else {
+        
+      }
+    }
+    yield();
+  });
+
+  server.on("/ota", HTTP_GET, []() {
+    server.sendHeader("Connection", "close");
+    server.send(200, "text/html", serverIndex);
+  });
+
   // Initialize device.
   dht.begin();
 
