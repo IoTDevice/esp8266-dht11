@@ -82,7 +82,7 @@ void handleDeviceInfo(){
   String message;
   message = "{\n";
   message += "\"name\":\""+deviceName +"\",\n";
-  message += "\"model\":\"com.iotserv.devices.dht11\",\n";
+  message += "\"model\":\"com.iotserv.devices.values\",\n";
   message += "\"mac\":\""+WiFi.macAddress()+"\",\n";
   message += "\"id\":\""+String(ESP.getFlashChipId())+"\",\n";
   message += "\"ui-support\":[\"web\",\"native\"],\n";
