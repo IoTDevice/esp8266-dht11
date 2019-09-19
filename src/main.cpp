@@ -172,6 +172,8 @@ void setup() {
   server.begin();
   // Serial.println("HTTP server started");
   MDNS.addService("iotdevice", "tcp", httpPort);
+  MDNS.addServiceTxt("iotdevice", "tcp", "type", "dht11");
+  MDNS.addServiceTxt("iotdevice", "tcp", "version", "1.0");
 }
 
 void loop() {
