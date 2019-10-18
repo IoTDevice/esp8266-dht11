@@ -77,25 +77,6 @@ void handleCurrentStatus(){
   server.send(200, "application/json", message);
 }
 
-// 设备信息
-void handleDeviceInfo(){
-  String message;
-  message = "{\n";
-  message += "\"name\":\""+deviceName +"\",\n";
-  message += "\"model\":\"com.iotserv.devices.dht\",\n";
-  message += "\"mac\":\""+WiFi.macAddress()+"\",\n";
-  message += "\"id\":\""+String(ESP.getFlashChipId())+"\",\n";
-  message += "\"ui-support\":[\"web\",\"native\"],\n";
-  message += "\"ui-first\":\"native\",\n";
-  message += "\"author\":\"Farry\",\n";
-  message += "\"email\":\"newfarry@126.com\",\n";
-  message += "\"home-page\":\"https://github.com/iotdevice\",\n";
-  message += "\"firmware-respository\":\"https://github.com/iotdevice/esp8266-dht11\",\n";
-  message += "\"firmware-version\":\""+version+"\"\n";
-  message +="}";
-  server.send(200, "application/json", message);
-}
-
 // 页面或者api没有找到
 void handleNotFound(){
   String message = "File Not Found\n\n";
@@ -132,7 +113,7 @@ void setup() {
   server.on("/rename", handleDeviceRename);
   server.on("/status", handleCurrentStatus);
   // about this device
-  server.on("/info", handleDeviceInfo);
+  // server.on("/info", handleDeviceInfo);
   server.on("/update", HTTP_POST, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/plain", (Update.hasError()) ? "{\"code\":1,\"message\":\"fail\"}" : "{\"code\":0,\"message\":\"success\"}");
@@ -172,8 +153,17 @@ void setup() {
   server.begin();
   // Serial.println("HTTP server started");
   MDNS.addService("iotdevice", "tcp", httpPort);
-  MDNS.addServiceTxt("iotdevice", "tcp", "type", "dht11");
-  MDNS.addServiceTxt("iotdevice", "tcp", "version", "1.0");
+  MDNS.addServiceTxt("iotdevice", "tcp", "name", deviceName);
+  MDNS.addServiceTxt("iotdevice", "tcp", "model", "com.iotserv.devices.dht");
+  MDNS.addServiceTxt("iotdevice", "tcp", "mac", WiFi.macAddress());
+  MDNS.addServiceTxt("iotdevice", "tcp", "id", ESP.getSketchMD5());
+  MDNS.addServiceTxt("iotdevice", "tcp", "ui-support", "web,native");
+  MDNS.addServiceTxt("iotdevice", "tcp", "ui-first", "native");
+  MDNS.addServiceTxt("iotdevice", "tcp", "author", "Farry");
+  MDNS.addServiceTxt("iotdevice", "tcp", "email", "newfarry@126.com");
+  MDNS.addServiceTxt("iotdevice", "tcp", "home-page", "https://github.com/iotdevice");
+  MDNS.addServiceTxt("iotdevice", "tcp", "firmware-respository", "https://github.com/iotdevice/esp8266-dht11");
+  MDNS.addServiceTxt("iotdevice", "tcp", "firmware-version", version);
 }
 
 void loop() {
