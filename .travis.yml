@@ -20,6 +20,8 @@ deploy:
   provider: releases
   api_key:
     secure: U8RBP870xwEglMX37YYOq8wJIVKooNrP2ZoKgJQvWf46VGTJ7BqDF1pzPq2C0vtsgnQUXybW5Wvkh1SE85zdbGuiVkMDLD2ZUYt+P/y8sF1iTYMWwlGZS4ku4rjeb9xLUELeBvrhK/E8stVYbwSrUIbVndXfCMFwa7NhFTmpnrv093u1DGKpjzFDZO+I44eK5EcpTvGzS4lKI2ej2q8WROL/hQofj0nPBXNsehbjUuyxYx2HhpO1JpbwamHNr0Us/hTM+43oDFpHzBT+vV5yLMiBCBDFjNrjBbuGKu6UOGnI/Je4DeDWJEVb4s8QcffU9KLaWOjYMMUTyTLx3oJ1cteC/85HpVOO52NJk61AXQicKuo61arwOms2KyKqX7e/mGw0ystwQodjD3VXsyC1YsdITdM+ynBDORNsQxo2pPyT99JJU12KGFJB5XTgs2i85n4emDHaBo/TayQO0jGT1cUntqtJX4V4H66GhxggXvOzlzq7otTc58to05FpfeVOFyOe9wa+9tmTRRXEoIVmUVzWlQ6YXnAnZYDd1cY+dVZzC2lVkIrxyiIdmMA5RYE6QzLNwcXrCnV+LM9a86BT6R8wzJFGk8Bkoo0N9JwdXmoL2t6peInT4HumcqWEXnRCtImu9unpuHH+rxDh2LK2Lt9sIAZQU07XcZ+JH4j6qQI=
-  file: "*"
+  file: "build/.pio/build/d1/firmware.bin"
+  skip_cleanup: true
   on:
     repo: IoTDevice/esp8266-dht11
+    tags: true
